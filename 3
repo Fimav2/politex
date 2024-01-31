@@ -1,0 +1,16 @@
+import csv
+with open("student_new.csv", encoding = "utf8") as csvfile:
+    reader = csv.DictReader(csvfile, delimiter=",", quotechar= '"')
+    data = sorted(reader,key=lambda x: x["titleProject_id"])
+
+id_project = None
+
+while id_project != "СТОП":
+    id_project = int(input("введите ID проекта >> "))
+    for el in data:
+        if int(el['titleprogect_id']) == id_project:
+            surname ,name ,patronymic = el["Name"].split()
+            print(f"Проект"№{id_project}) делал: {name[0]}.{surname} он(а) получил(а)
+            break
+    else:
+        print("Ничего не найдено ")
