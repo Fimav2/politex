@@ -1,24 +1,30 @@
 import csv
 
-with open("students.csv",encoding="utf=8") as file:
-    reader = csv.reader(file,delimiter=",",quotechar='"')
-    answer =list(reader)[1:]
-    for id, name, project, clas, score in answer:
+with open("students.csv", encoding="utf8") as file:
+    reader = csv.reader(file, delimiter=",")
+    answer = list(reader)
+    for id, name, titleProject_id, clas, score in answer:
         if "Хадаров Владимир" in name:
-            print(f"Ты получил: {score}, за проект {id}")
-            break
-    class_count = {}
-    sum_class = {}
-    for el in answer:
-        class_count[el[-2]] = class_count.get(el[-2], 0) + 1
-        sum_class[el[-2]] = class_count.get(el[-2], 0) + (int(el[-1]) if el[-1] != "None" else 0)
-    for el in answer:
-        if el[-1] == "None":
-            el[-1] = round(sum_class[el[-2]] / class_count[el[-2]], 2)
-    file.close()
+            print("Ты получил:", score, "за проект -", titleProject_id)
+"""Множество используем для поиска классов проектов за оценки"""
+mn = set()
+for id, name, titleProject_id, clas, score in answer:
+    if score == "None":
+        mn.add(clas)
+sp = ["9г","11и","8х","11в","9т"]
+sp1 = [0] * 5
+sp2 = [0] * 5
+"""ищу сумму их количество"""
+for id, name, titleProject_id, clas, score in answer:
+    if clas in sp and score != "None":
+        ind = sp.index(clas)
+        sp1[ind] += int(score)
+        sp2[ind] += 1
+with open("student_new.csv3", "w",newline="") as file2:
+    writer = csv.writer(file2)
+    for id, name, titleProject_id, clas, score in answer:
+        if score == "None":
+            ind = sp.index(clas)
+            score = str(round(sp1[ind] / sp2[ind],3))
+        writer.writerow([id, name, titleProject_id, clas, score])
 
-with open("student_new.csv", "w", newline = "", encoding = "utf-8") as file:
-    writer = csv.writer(file)
-    writer.writerow(["id", "Name", "titleProject_id", "class", "score"])
-    writer.writerows(answer)
-    
